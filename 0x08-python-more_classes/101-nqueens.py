@@ -1,107 +1,105 @@
 #!/usr/bin/python3
-"""
-
-This module contains an algorithm that resolves the N-Queen puzzle
-using backtracking
-
-"""
+"""Defines a Rectangle class."""
 
 
-def isSafe(m_queen, nqueen):
-    """ Method that determines if the queens can or can't kill each other
+class Rectangle:
+    """Represent a rectangle.
 
-    Args:
-        m_queen: array that has the queens positions
-        nqueen: queen number
-
-    Returns:
-        True: when queens can't kill each other
-        False: when some of the queens can kill
-
+    Attributes:
+        number_of_instances (int): The number of Rectangle instances.
+        print_symbol (any): The symbol used for string representation.
     """
 
-    for i in range(nqueen):
+    number_of_instances = 0
+    print_symbol = "#"
 
-        if m_queen[i] == m_queen[nqueen]:
-            return False
+    def __init__(self, width=0, height=0):
+        """Initialize a new Rectangle.
 
-        if abs(m_queen[i] - m_queen[nqueen]) == abs(i - nqueen):
-            return False
+        Args:
+            width (int): The width of the new rectangle.
+            height (int): The height of the new rectangle.
+        """
+        type(self).number_of_instances += 1
+        self.width = width
+        self.height = height
 
-    return True
+    @property
+    def width(self):
+        """Get/set the width of the Rectangle."""
+        return self.__width
 
+    @width.setter
+    def width(self, value):
+        if not isinstance(value, int):
+            raise TypeError("width must be an integer")
+        if value < 0:
+            raise ValueError("width must be >= 0")
+        self.__width = value
 
-def print_result(m_queen, nqueen):
-    """ Method that prints the list with the Queens positions
+    @property
+    def height(self):
+        """Get/set the height of the Rectangle."""
+        return self.__height
 
-    Args:
-        m_queen: array that has the queens positions
-        nqueen: queen number
+    @height.setter
+    def height(self, value):
+        if not isinstance(value, int):
+            raise TypeError("height must be an integer")
+        if value < 0:
+            raise ValueError("height must be >= 0")
+        self.__height = value
 
-    """
+    def area(self):
+        """Return the area of the Rectangle."""
+        return (self.__width * self.__height)
 
-    res = []
+    def perimeter(self):
+        """Return the perimeter of the Rectangle."""
+        if self.__width == 0 or self.__height == 0:
+            return (0)
+        return ((self.__width * 2) + (self.__height * 2))
 
-    for i in range(nqueen):
-        res.append([i, m_queen[i]])
+    @staticmethod
+    def bigger_or_equal(rect_1, rect_2):
+        """Return the Rectangle with the greater area.
 
-    print(res)
+        Args:
+            rect_1 (Rectangle): The first Rectangle.
+            rect_2 (Rectangle): The second Rectangle.
+        Raises:
+            TypeError: If either of rect_1 or rect_2 is not a Rectangle.
+        """
+        if not isinstance(rect_1, Rectangle):
+            raise TypeError("rect_1 must be an instance of Rectangle")
+        if not isinstance(rect_2, Rectangle):
+            raise TypeError("rect_2 must be an instance of Rectangle")
+        if rect_1.area() >= rect_2.area():
+            return (rect_1)
+        return (rect_2)
 
+    def __str__(self):
+        """Return the printable representation of the Rectangle.
 
-def Queen(m_queen, nqueen):
-    """ Recursive function that executes the Backtracking algorithm
+        Represents the rectangle with the # character.
+        """
+        if self.__width == 0 or self.__height == 0:
+            return ("")
 
-    Args:
-        m_queen: array that has the queens positions
-        nqueen: queen number
+        rect = []
+        for i in range(self.__height):
+            [rect.append(str(self.print_symbol)) for j in range(self.__width)]
+            if i != self.__height - 1:
+                rect.append("\n")
+        return ("".join(rect))
 
-    """
+    def __repr__(self):
+        """Return the string representation of the Rectangle."""
+        rect = "Rectangle(" + str(self.__width)
+        rect += ", " + str(self.__height) + ")"
+        return (rect)
 
-    if nqueen is len(m_queen):
-        print_result(m_queen, nqueen)
-        return
-
-    m_queen[nqueen] = -1
-
-    while((m_queen[nqueen] < len(m_queen) - 1)):
-
-        m_queen[nqueen] += 1
-
-        if isSafe(m_queen, nqueen) is True:
-
-            if nqueen is not len(m_queen):
-                Queen(m_queen, nqueen + 1)
-
-
-def solveNQueen(size):
-    """ Function that invokes the Backtracking algorithm
-
-    Args:
-        size: size of the chessboard
-
-    """
-
-    m_queen = [-1 for i in range(size)]
-
-    Queen(m_queen, 0)
-
-
-if __name__ == '__main__':
-
-    import sys
-
-    if len(sys.argv) == 1 or len(sys.argv) > 2:
-        print("Usage: nqueens N")
-        sys.exit(1)
-
-    try:
-        size = int(sys.argv[1])
-    except:
-        print("N must be a number")
-        sys.exit(1)
-
-    if size < 4:
-        print("N must be at least 4")
-        sys.exit(1)
-
-    solveNQueen(size)
+    def __del__(self):
+        """Print a message for every deletion of a Rectangle."""
+        type(self).number_of_instances -= 1
+        print("Bye rectangle...")
